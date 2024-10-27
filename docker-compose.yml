@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:14
+    container_name: db_movies
+    restart: always
+    environment:
+      POSTGRES_DB: movies
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
