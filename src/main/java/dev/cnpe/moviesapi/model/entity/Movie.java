@@ -34,6 +34,15 @@ public class Movie {
     @ManyToMany(mappedBy = "movies")
     private Set<Character> characters = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "movies_genres",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres = new HashSet<>();
+
+
     @Override
     public String toString() {
         return new StringJoiner(", ", Movie.class.getSimpleName() + "[", "]")
