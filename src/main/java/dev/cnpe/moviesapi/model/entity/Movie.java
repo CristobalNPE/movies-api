@@ -1,9 +1,7 @@
 package dev.cnpe.moviesapi.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -13,6 +11,8 @@ import java.util.StringJoiner;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "movies")
 public class Movie {
@@ -33,17 +33,6 @@ public class Movie {
 
     @ManyToMany(mappedBy = "movies")
     private Set<Character> characters = new HashSet<>();
-
-    public Movie(Long id, String title, LocalDate creationDate, Rating rating, Set<Character> characters) {
-        this.id = id;
-        this.title = title;
-        this.creationDate = creationDate;
-        this.rating = rating;
-        this.characters = characters;
-    }
-
-    public Movie() {
-    }
 
     @Override
     public String toString() {

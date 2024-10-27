@@ -1,7 +1,9 @@
 package dev.cnpe.moviesapi.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
@@ -13,8 +15,11 @@ import java.util.StringJoiner;
 //Evitamos usar Lombok en entidades para:
 //toString() No debe contener campos con relaciones LAZY (colecciones por defecto)
 //equals() ans hashCode() Solo deberían depender de Id
+
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "characters")
 public class Character {
@@ -46,20 +51,6 @@ public class Character {
             inverseJoinColumns = @JoinColumn(name = "movie_id")
     )
     private Set<Movie> associatedMovies = new HashSet<>();
-
-
-    public Character(Long id, String image, String name, Integer age, Double weight, String story, Set<Movie> associatedMovies) {
-        this.id = id;
-        this.image = image;
-        this.name = name;
-        this.age = age;
-        this.weight = weight;
-        this.story = story;
-        this.associatedMovies = associatedMovies;
-    }
-
-    public Character() {
-    }
 
     @Override
     public boolean equals(Object o) {
