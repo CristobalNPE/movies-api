@@ -15,6 +15,7 @@ import java.util.StringJoiner;
 //Evitamos usar Lombok en entidades para:
 //toString() No debe contener campos con relaciones LAZY (colecciones por defecto)
 //equals() ans hashCode() Solo deberían depender de Id
+//nunca @Data
 
 @Setter
 @Getter
