@@ -24,7 +24,12 @@ public class Character {
     private Double weight;
     private String story;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(
+            name = "movies_characters",
+            joinColumns = @JoinColumn(name = "character_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
     private Set<Movie> associatedMovies = new HashSet<>();
 
 
