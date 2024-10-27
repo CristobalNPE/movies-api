@@ -3,6 +3,7 @@ package dev.cnpe.moviesapi.model.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -10,6 +11,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "movies")
 public class Movie {
@@ -62,46 +65,6 @@ public class Movie {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDate getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public Rating getRating() {
-        return rating;
-    }
-
-    public void setRating(Rating rating) {
-        this.rating = rating;
-    }
-
-    public Set<Character> getCharacters() {
-        return characters;
-    }
-
-    public void setCharacters(Set<Character> characters) {
-        this.characters = characters;
     }
 
     @Getter

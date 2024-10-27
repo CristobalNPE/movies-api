@@ -1,6 +1,8 @@
 package dev.cnpe.moviesapi.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -8,9 +10,11 @@ import java.util.Set;
 import java.util.StringJoiner;
 
 
-//Evitamos usar Lombok en entidades
+//Evitamos usar Lombok en entidades para:
 //toString() No debe contener campos con relaciones LAZY (colecciones por defecto)
 //equals() ans hashCode() Solo deberían depender de Id
+@Setter
+@Getter
 @Entity
 @Table(name = "characters")
 public class Character {
@@ -55,62 +59,6 @@ public class Character {
     }
 
     public Character() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public Double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
-
-    public String getStory() {
-        return story;
-    }
-
-    public void setStory(String story) {
-        this.story = story;
-    }
-
-    public Set<Movie> getAssociatedMovies() {
-        return associatedMovies;
-    }
-
-    public void setAssociatedMovies(Set<Movie> associatedMovies) {
-        this.associatedMovies = associatedMovies;
     }
 
     @Override
