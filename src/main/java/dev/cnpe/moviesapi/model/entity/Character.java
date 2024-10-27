@@ -17,11 +17,22 @@ public class Character {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "image")
     private String image;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "age")
     private Integer age;
+
+    @Column(name = "weight")
     private Double weight;
+
+    @Column(name = "story")
     private String story;
 
     @ManyToMany
