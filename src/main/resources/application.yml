@@ -20,3 +20,13 @@ spring:
       data-locations: classpath:db/data.sql
       schema-locations: classpath:db/schema.sql
 
+# App
+
+app:
+  error:
+    base-uri: https://api.domainplaceholder.com/errors/
+
+# Logging
+logging:
+  level:
+    root: trace
