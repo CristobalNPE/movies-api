@@ -30,7 +30,7 @@ public class Movie {
     @Column(name = "creation_date")
     private LocalDate creationDate;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(name = "rating")
     private Rating rating;
 
@@ -71,11 +71,11 @@ public class Movie {
     @Getter
     @RequiredArgsConstructor
     public enum Rating {
-        ONE(1),
-        TWO(2),
-        THREE(3),
-        FOUR(4),
-        FIVE(5);
+        UNWATCHABLE(1),
+        MEDIOCRE(2),
+        DECENT(3),
+        GREAT(4),
+        MASTERPIECE(5);
 
         private final int value;
     }
