@@ -24,6 +24,9 @@ public class Movie {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "image")
+    private String image;
+
     @Column(name = "creation_date")
     private LocalDate creationDate;
 
