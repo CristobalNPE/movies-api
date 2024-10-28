@@ -10,11 +10,11 @@ VALUES ('Action', 'https://dummy-images.com/genres/action.png'),
 
 -- Movies
 INSERT INTO movies (title, creation_date, rating, image)
-VALUES ('The Matrix', '1999-03-31', 5, 'https://dummy-images.com/movies/matrix.png'),
-       ('Lord of the Rings', '2001-12-19', 5, 'https://dummy-images.com/movies/lotr.png'),
-       ('Inception', '2010-07-16', 4, 'https://dummy-images.com/movies/inception.png'),
-       ('The Dark Knight', '2008-07-18', 5, 'https://dummy-images.com/movies/dark-knight.png'),
-       ('Interstellar', '2014-11-07', 4, 'https://dummy-images.com/movies/interstellar.png');
+VALUES ('The Matrix', '1999-03-31', 'MASTERPIECE', 'https://dummy-images.com/movies/matrix.png'),
+       ('Lord of the Rings', '2001-12-19', 'MASTERPIECE', 'https://dummy-images.com/movies/lotr.png'),
+       ('Inception', '2010-07-16', 'GREAT', 'https://dummy-images.com/movies/inception.png'),
+       ('The Dark Knight', '2008-07-18', 'MASTERPIECE', 'https://dummy-images.com/movies/dark-knight.png'),
+       ('Interstellar', '2014-11-07', 'UNWATCHABLE', 'https://dummy-images.com/movies/interstellar.png');
 
 -- Characters
 INSERT INTO characters (name, age, weight, story, image)
@@ -37,7 +37,8 @@ VALUES (1, 1), -- Matrix - Action
        (4, 1), -- Dark Knight - Action
        (4, 5), -- Dark Knight - Drama
        (5, 3), -- Interstellar - Sci-Fi
-       (5, 5); -- Interstellar - Drama
+       (5, 5);
+-- Interstellar - Drama
 
 -- Movies-Characters relationships
 INSERT INTO movies_characters (movie_id, character_id)
