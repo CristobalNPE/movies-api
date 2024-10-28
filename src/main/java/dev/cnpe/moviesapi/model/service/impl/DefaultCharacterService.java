@@ -36,7 +36,7 @@ public class DefaultCharacterService implements CharacterService {
 
     @Override
     public Character createCharacter(CharacterCreationRequest creationRequest) {
-        return null;
+        return characterRepository.save(characterMapper.toEntity(creationRequest));
     }
 
     @Override
