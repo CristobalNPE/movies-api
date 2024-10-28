@@ -5,8 +5,8 @@ import lombok.Builder;
 @Builder
 public record CharacterSearchCriteria(
         String name,
-        String age,
-        String weight,
+        Integer age,
+        Double weight,
         String movieTitle
 ) {
 }
