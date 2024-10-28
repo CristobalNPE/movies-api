@@ -1,12 +1,17 @@
 package dev.cnpe.moviesapi.controller;
 
+import dev.cnpe.moviesapi.model.dto.CharacterCreationRequest;
 import dev.cnpe.moviesapi.model.dto.CharacterResponse;
 import dev.cnpe.moviesapi.model.dto.CharacterSearchCriteria;
 import dev.cnpe.moviesapi.model.dto.CharacterSearchResult;
+import dev.cnpe.moviesapi.model.entity.Character;
 import dev.cnpe.moviesapi.model.service.CharacterService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -15,12 +20,6 @@ import java.util.List;
 public class CharacterController {
 
     private final CharacterService characterService;
-
-    @PostMapping
-    public List<CharacterSearchResult> advancedSearch(@RequestBody CharacterSearchCriteria searchCriteria) {
-        return characterService.search(searchCriteria);
-    }
-
 
     @GetMapping
     public List<CharacterSearchResult> searchCharacters(@RequestParam(required = false) String name,
@@ -37,4 +36,17 @@ public class CharacterController {
         return characterService.getCharacterById(id);
     }
 
+    @PostMapping
+    public ResponseEntity<Void> createCharacter(@RequestBody CharacterCreationRequest creationRequest,
+                                                UriComponentsBuilder ucb) {
+
+        Character createdCharacter = characterService.createCharacter(creationRequest);
+
+        URI location = ucb.path("/api/v1/characters/{id}")
+                          .buildAndExpand(createdCharacter.getId())
+                          .toUri();
+
+        return ResponseEntity.created(location).build();
+
+    }
 }
