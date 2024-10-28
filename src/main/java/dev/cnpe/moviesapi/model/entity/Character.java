@@ -51,7 +51,7 @@ public class Character {
             joinColumns = @JoinColumn(name = "character_id"),
             inverseJoinColumns = @JoinColumn(name = "movie_id")
     )
-    private Set<Movie> associatedMovies = new HashSet<>();
+    private Set<Movie> movies = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
