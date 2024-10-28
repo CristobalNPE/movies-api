@@ -1,17 +1,22 @@
 package dev.cnpe.moviesapi.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.cnpe.moviesapi.model.dto.CharacterCreationRequest;
 import dev.cnpe.moviesapi.model.service.CharacterService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -22,6 +27,11 @@ public class CharacterControllerTests {
 
     @Autowired
     private CharacterService characterService;
+
+    //Needed for serializing/deserializing LocalDate, Instant, etc.
+//    private final static ObjectMapper jackson = new ObjectMapper().registerModule(new JavaTimeModule());
+    @Autowired
+    private ObjectMapper mapper;
 
     @Nested
     @WithMockUser
@@ -69,6 +79,40 @@ public class CharacterControllerTests {
                    .andExpect(jsonPath("$.weight").value(70.5))
                    .andExpect(jsonPath("$.story").value("Main protagonist for testing"))
                    .andExpect(jsonPath("$.movies.length()").value(5));
+        }
+
+        @Test
+        void shouldCreateCharacter() throws Exception {
+
+            CharacterCreationRequest creationRequest =
+                    CharacterCreationRequest.builder()
+                                            .image("image-test.jpg")
+                                            .name("Test character")
+                                            .age(666)
+                                            .weight(66.6)
+                                            .story("Test story")
+                                            .build();
+
+
+            String location = mockMvc.perform(post("/api/v1/characters")
+                                             .with(csrf())
+                                             .content(mapper.writeValueAsString(creationRequest))
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                     )
+                                     .andExpect(status().is2xxSuccessful())
+                                     .andExpect(header().exists("Location"))
+                                     .andReturn().getResponse().getHeader("Location");
+
+            assertThat(location).isNotNull();
+
+            mockMvc.perform(get(location))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$.name").value("Test character"))
+                   .andExpect(jsonPath("$.image").value("image-test.jpg"))
+                   .andExpect(jsonPath("$.age").value(666))
+                   .andExpect(jsonPath("$.weight").value(66.6))
+                   .andExpect(jsonPath("$.story").value("Test story"))
+                   .andExpect(jsonPath("$.movies.length()").value(0));
         }
     }
 
