@@ -68,7 +68,13 @@ public class DefaultCharacterService implements CharacterService {
     }
 
     private void validateUpdate(Character character, CharacterUpdateRequest updateRequest) {
-        //Validations not covered by @Validated?
+        /*
+         * Checks entity state
+         * Validates business rules // Not covered by @Validated?
+         * Handles concurrency
+         * Validates relationships
+         * Throws specific exceptions
+         * */
     }
 
     private void updateEntityFromRequest(Character character, CharacterUpdateRequest updateRequest) {
@@ -88,8 +94,8 @@ public class DefaultCharacterService implements CharacterService {
                 .ifPresent(character::setStory);
 
         /*   Updates if auditing:
-        *    entity.setLastModifiedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-        *    entity.setLastModifiedDate(LocalDateTime.now());
-        * */
+         *    entity.setLastModifiedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+         *    entity.setLastModifiedDate(LocalDateTime.now());
+         * */
     }
 }
