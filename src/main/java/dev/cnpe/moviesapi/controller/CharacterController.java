@@ -1,19 +1,17 @@
 package dev.cnpe.moviesapi.controller;
 
-import dev.cnpe.moviesapi.model.dto.CharacterCreationRequest;
-import dev.cnpe.moviesapi.model.dto.CharacterResponse;
-import dev.cnpe.moviesapi.model.dto.CharacterSearchCriteria;
-import dev.cnpe.moviesapi.model.dto.CharacterSearchResult;
+import dev.cnpe.moviesapi.model.dto.*;
 import dev.cnpe.moviesapi.model.entity.Character;
 import dev.cnpe.moviesapi.model.service.CharacterService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/characters")
@@ -23,11 +21,15 @@ public class CharacterController {
     private final CharacterService characterService;
 
     @GetMapping
-    public List<CharacterSearchResult> searchCharacters(@RequestParam(required = false) String name, @RequestParam(required = false) Integer age, @RequestParam(required = false) Double weight, @RequestParam(required = false) String movieTitle) {
+    public Page<CharacterSearchResult> searchCharacters(Pageable pageable,
+                                                        @RequestParam(required = false) String name,
+                                                        @RequestParam(required = false) Integer age,
+                                                        @RequestParam(required = false) Double weight,
+                                                        @RequestParam(required = false) String movieTitle) {
 
-        return characterService.search(new CharacterSearchCriteria(name, age, weight, movieTitle));
+        return characterService.search(pageable, new CharacterSearchCriteria(name, age, weight, movieTitle));
+
     }
-
 
     @GetMapping("/{id}")
     public CharacterResponse getCharacterById(@PathVariable(name = "id") Long id) {
@@ -50,5 +52,9 @@ public class CharacterController {
         characterService.deleteCharacter(id);
     }
 
-    //update character
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{id}")
+    public void updateCharacter(@RequestBody CharacterUpdateRequest updateRequest, @PathVariable Long id) {
+        characterService.updateCharacter(updateRequest, id);
+    }
 }
