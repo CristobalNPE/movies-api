@@ -3,8 +3,7 @@ package dev.cnpe.moviesapi.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 public class DomainException extends RuntimeException {
@@ -53,7 +52,7 @@ public class DomainException extends RuntimeException {
         DATA_TYPE_MISMATCH(BAD_REQUEST),
 
         //CHARACTER ERRORS
-        CHARACTER_NOT_FOUND(BAD_REQUEST);
+        CHARACTER_NOT_FOUND(NOT_FOUND);
 
         public final HttpStatus statusCode;
 
