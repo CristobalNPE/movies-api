@@ -14,8 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -113,6 +112,20 @@ public class CharacterControllerTests {
                    .andExpect(jsonPath("$.weight").value(66.6))
                    .andExpect(jsonPath("$.story").value("Test story"))
                    .andExpect(jsonPath("$.movies.length()").value(0));
+        }
+
+        @Test
+        void shouldDeleteCharacterIfPresent() throws Exception {
+
+            mockMvc.perform(get("/api/v1/characters/1"))
+                   .andExpect(status().isOk());
+
+            mockMvc.perform(delete("/api/v1/characters/1"))
+                   .andExpect(status().isNoContent());
+
+            mockMvc.perform(get("/api/v1/characters/1"))
+                   .andExpect(status().isNotFound());
+
         }
     }
 
