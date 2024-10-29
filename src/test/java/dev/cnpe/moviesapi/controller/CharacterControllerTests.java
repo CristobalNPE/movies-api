@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,6 +82,7 @@ public class CharacterControllerTests {
         }
 
         @Test
+        @DirtiesContext
         void shouldCreateCharacter() throws Exception {
 
             CharacterCreationRequest creationRequest =
@@ -115,6 +117,7 @@ public class CharacterControllerTests {
         }
 
         @Test
+        @DirtiesContext
         void shouldDeleteCharacterIfPresent() throws Exception {
 
             mockMvc.perform(get("/api/v1/characters/1"))
@@ -126,6 +129,12 @@ public class CharacterControllerTests {
             mockMvc.perform(get("/api/v1/characters/1"))
                    .andExpect(status().isNotFound());
 
+        }
+
+        @Test
+        void shouldReturnBadRequestIsNoCharacter()throws Exception  {
+            mockMvc.perform(delete("/api/v1/characters/99112266"))
+                   .andExpect(status().isNotFound());
         }
     }
 
