@@ -2,6 +2,7 @@ package dev.cnpe.moviesapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.cnpe.moviesapi.model.dto.CharacterCreationRequest;
+import dev.cnpe.moviesapi.model.dto.CharacterUpdateRequest;
 import dev.cnpe.moviesapi.model.service.CharacterService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -41,31 +42,31 @@ public class CharacterControllerTests {
         void searchShouldReturnAllCharactersWhenNoParams() throws Exception {
             mockMvc.perform(get("/api/v1/characters"))
                    .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.length()").value(5));
+                   .andExpect(jsonPath("$.content.length()").value(5));
         }
 
         @Test
         void searchShouldReturnFilteredByName() throws Exception {
             mockMvc.perform(get("/api/v1/characters?name=test"))
                    .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.length()").value(3));
+                   .andExpect(jsonPath("$.content.length()").value(3));
         }
 
         @Test
         void searchShouldReturnFilteredByMovieTitle() throws Exception {
             mockMvc.perform(get("/api/v1/characters?movieTitle=Delta"))
                    .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.length()").value(2))
-                   .andExpect(jsonPath("$[0].name").value("Test Character A"))
-                   .andExpect(jsonPath("$[1].name").value("Fake Character D"));
+                   .andExpect(jsonPath("$.content.length()").value(2))
+                   .andExpect(jsonPath("$.content[0].name").value("Test Character A"))
+                   .andExpect(jsonPath("$.content[1].name").value("Fake Character D"));
         }
 
         @Test
         void searchShouldReturnFilteredByAge() throws Exception {
             mockMvc.perform(get("/api/v1/characters?age=20"))
                    .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.length()").value(1))
-                   .andExpect(jsonPath("$[0].name").value("Test Character A"));
+                   .andExpect(jsonPath("$.content.length()").value(1))
+                   .andExpect(jsonPath("$.content[0].name").value("Test Character A"));
         }
 
         @Test
@@ -132,9 +133,58 @@ public class CharacterControllerTests {
         }
 
         @Test
-        void shouldReturnBadRequestIsNoCharacter()throws Exception  {
+        void shouldReturnBadRequestIsNoCharacter() throws Exception {
             mockMvc.perform(delete("/api/v1/characters/99112266"))
                    .andExpect(status().isNotFound());
+        }
+
+        @Test
+        @DirtiesContext
+        void shouldUpdateCharacter() throws Exception {
+            CharacterUpdateRequest updateRequest = CharacterUpdateRequest.builder()
+                                                                         .image("updated-image.png")
+                                                                         .name("Updated Character Name")
+                                                                         .age(100)
+                                                                         .weight(100.0)
+                                                                         .story("Updated story")
+                                                                         .build();
+
+            mockMvc.perform(put("/api/v1/characters/1")
+                           .content(mapper.writeValueAsString(updateRequest))
+                           .contentType(MediaType.APPLICATION_JSON)
+                   )
+                   .andExpect(status().isNoContent());
+
+            mockMvc.perform(get("/api/v1/characters/1"))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$.name").value("Updated Character Name"))
+                   .andExpect(jsonPath("$.image").value("updated-image.png"))
+                   .andExpect(jsonPath("$.age").value(100))
+                   .andExpect(jsonPath("$.weight").value(100.0))
+                   .andExpect(jsonPath("$.story").value("Updated story"));
+        }
+
+        @Test
+        @DirtiesContext
+        void shouldUpdateOnlyGivenFields() throws Exception {
+            CharacterUpdateRequest updateRequest = CharacterUpdateRequest.builder()
+                                                                         .name("Updated Character Name")
+                                                                         .weight(100.0)
+                                                                         .build();
+
+            mockMvc.perform(put("/api/v1/characters/1")
+                           .content(mapper.writeValueAsString(updateRequest))
+                           .contentType(MediaType.APPLICATION_JSON)
+                   )
+                   .andExpect(status().isNoContent());
+
+            mockMvc.perform(get("/api/v1/characters/1"))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$.name").value("Updated Character Name"))
+                   .andExpect(jsonPath("$.image").value("char1.jpg"))
+                   .andExpect(jsonPath("$.age").value(20))
+                   .andExpect(jsonPath("$.weight").value(100.0))
+                   .andExpect(jsonPath("$.story").value("Main protagonist for testing"));
         }
     }
 
