@@ -4,12 +4,16 @@ import dev.cnpe.moviesapi.model.dto.CharacterSearchCriteria;
 import dev.cnpe.moviesapi.model.dto.CharacterSearchResult;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -17,7 +21,7 @@ public class CharacterSearchQuery {
 
     private final EntityManager entityManager;
 
-    public List<CharacterSearchResult> search(CharacterSearchCriteria searchCriteria) {
+    public Page<CharacterSearchResult> search(CharacterSearchCriteria searchCriteria, Pageable pageable) {
 
         // @formatter:off
         String jpql =
@@ -25,11 +29,17 @@ public class CharacterSearchQuery {
                 " FROM Character c" +
                 (searchCriteria.movieTitle() != null ? " LEFT JOIN c.movies m" : "") +
                 " WHERE ";
+
+        //Necesario para paginación
+        String countJpql =
+                "SELECT COUNT(DISTINCT c)" +
+                " FROM Character c" +
+                (searchCriteria.movieTitle() != null ? " LEFT JOIN c.movies m" : "") +
+                " WHERE ";
         // @formatter:on
 
         List<String> jpqlParts = new ArrayList<>();
         jpqlParts.add("1=1");
-
         Map<String, Object> params = new HashMap<>();
 
         if (searchCriteria.name() != null) {
@@ -49,13 +59,45 @@ public class CharacterSearchQuery {
             params.put("movieTitle", searchCriteria.movieTitle());
         }
 
-        String whereSearchCriteria = String.join(" AND ", jpqlParts);
+        String whereClause = String.join(" AND ", jpqlParts);
 
-        var query = entityManager.createQuery(jpql + whereSearchCriteria, CharacterSearchResult.class);
-        for (String paramName : params.keySet()) {
-            query.setParameter(paramName, params.get(paramName));
-        }
-        return query.getResultList();
+        var countQuery = entityManager.createQuery(countJpql + whereClause, Long.class);
+        params.forEach(countQuery::setParameter);
+        Long total = countQuery.getSingleResult();
+
+
+        var dataQuery = entityManager.createQuery(jpql + whereClause + buildOrderByClause(pageable), CharacterSearchResult.class);
+        params.forEach(dataQuery::setParameter);
+
+        dataQuery.setFirstResult((int) pageable.getOffset());
+        dataQuery.setMaxResults(pageable.getPageSize());
+
+        List<CharacterSearchResult> results = dataQuery.getResultList();
+        return new PageImpl<>(results, pageable, total);
     }
+
+    private String buildOrderByClause(Pageable pageable) {
+        //<editor-fold desc="Imperative/No Warning">
+        //        if (!pageable.getSort().isSorted()) {
+//            return "";
+//        }
+//
+//        List<String> sortOrders = new ArrayList<>();
+//        pageable.getSort().forEach(order ->
+//                sortOrders.add("c." + order.getProperty() + " " + order.getDirection())
+//        );
+//
+//        return " ORDER BY " + String.join(", ", sortOrders);
+        //</editor-fold>
+
+        return pageable.getSort().isSorted()
+                ? pageable.getSort().stream()
+                          .map(order -> "c." + order.getProperty() + " " + order.getDirection())
+                          .collect(Collectors.joining(", ", " ORDER BY ", ""))
+                : "";
+
+
+    }
+
 
 }
