@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class CharacterControllerTests {
+public class CharacterRestControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -173,6 +173,7 @@ public class CharacterControllerTests {
                                                                          .build();
 
             mockMvc.perform(put("/api/v1/characters/1")
+                           .with(csrf())
                            .content(mapper.writeValueAsString(updateRequest))
                            .contentType(MediaType.APPLICATION_JSON)
                    )
