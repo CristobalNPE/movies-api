@@ -46,6 +46,9 @@ public class DefaultCharacterService implements CharacterService {
 
     @Override
     public void deleteCharacter(Long id) {
-
+        if (!characterRepository.existsById(id)) {
+            throw new DomainException(CHARACTER_NOT_FOUND);
+        }
+        characterRepository.deleteById(id);
     }
 }

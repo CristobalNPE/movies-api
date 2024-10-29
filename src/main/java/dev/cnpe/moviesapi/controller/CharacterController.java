@@ -7,6 +7,7 @@ import dev.cnpe.moviesapi.model.dto.CharacterSearchResult;
 import dev.cnpe.moviesapi.model.entity.Character;
 import dev.cnpe.moviesapi.model.service.CharacterService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -22,10 +23,7 @@ public class CharacterController {
     private final CharacterService characterService;
 
     @GetMapping
-    public List<CharacterSearchResult> searchCharacters(@RequestParam(required = false) String name,
-                                                        @RequestParam(required = false) Integer age,
-                                                        @RequestParam(required = false) Double weight,
-                                                        @RequestParam(required = false) String movieTitle) {
+    public List<CharacterSearchResult> searchCharacters(@RequestParam(required = false) String name, @RequestParam(required = false) Integer age, @RequestParam(required = false) Double weight, @RequestParam(required = false) String movieTitle) {
 
         return characterService.search(new CharacterSearchCriteria(name, age, weight, movieTitle));
     }
@@ -37,16 +35,20 @@ public class CharacterController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createCharacter(@RequestBody CharacterCreationRequest creationRequest,
-                                                UriComponentsBuilder ucb) {
+    public ResponseEntity<Void> createCharacter(@RequestBody CharacterCreationRequest creationRequest, UriComponentsBuilder ucb) {
 
         Character createdCharacter = characterService.createCharacter(creationRequest);
 
-        URI location = ucb.path("/api/v1/characters/{id}")
-                          .buildAndExpand(createdCharacter.getId())
-                          .toUri();
+        URI location = ucb.path("/api/v1/characters/{id}").buildAndExpand(createdCharacter.getId()).toUri();
 
         return ResponseEntity.created(location).build();
-
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void deleteCharacter(@PathVariable Long id) {
+        characterService.deleteCharacter(id);
+    }
+
+    //update character
 }
