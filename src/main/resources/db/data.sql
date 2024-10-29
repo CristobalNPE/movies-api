@@ -18,13 +18,13 @@ VALUES ('The Matrix', '1999-03-31', 'MASTERPIECE', 'https://dummy-images.com/mov
 
 -- Characters
 INSERT INTO characters (name, age, weight, story, image)
-VALUES ('Neo', 35, 75.5, 'The One who freed humanity from the Matrix', 'https://dummy-images.com/characters/neo.png'),
+VALUES ('Neo', 35, 75.5, 'The One who freed humanity from the Matrix', 'https://unsplash.com/es/fotos/pajaro-verde-sobre-chaqueta-marron-YiXsjwJKXmo'),
        ('Morpheus', 45, 82.3, 'Leader of the resistance and mentor to Neo',
-        'https://dummy-images.com/characters/morpheus.png'),
-       ('Frodo Baggins', 33, 45.2, 'Ring-bearer from the Shire', 'https://dummy-images.com/characters/frodo.png'),
+        'https://unsplash.com/es/fotos/un-robot-azul-con-un-signo-de-interrogacion-en-el-pecho-L5tfgwefMmQ'),
+       ('Frodo Baggins', 33, 45.2, 'Ring-bearer from the Shire', 'https://unsplash.com/es/fotos/hombre-con-camisa-blanca-con-sombrero-marron-otKYK0h-5tE'),
        ('Batman', 35, 95.0, 'Billionaire vigilante protecting Gotham',
-        'https://dummy-images.com/characters/batman.png'),
-       ('Cooper', 45, 80.0, 'Former NASA pilot turned farmer', 'https://dummy-images.com/characters/cooper.png');
+        'https://unsplash.com/es/fotos/un-animal-de-peluche-sosteniendo-una-pelota-sobre-un-fondo-azul-RDWTEbrvNac'),
+       ('Cooper', 45, 80.0, 'Former NASA pilot turned farmer', 'https://unsplash.com/es/fotos/una-figura-rosa-con-signos-de-interrogacion-saliendo-de-ella-UP9aGPmtD6c');
 
 -- Movies-Genres relationships
 INSERT INTO movies_genres (movie_id, genre_id)

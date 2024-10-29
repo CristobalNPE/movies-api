@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Characters</title>
+</head>
+<body>
+<h1>Characters</h1>
+
+<!-- Search Form -->
+<form th:action="@{/characters}" method="get">
+    <input type="text" name="name" th:value="${searchCriteria.name}" placeholder="Name"/>
+    <!-- Remove age input since it's not in SearchResult -->
+    <button type="submit">Search</button>
+</form>
+
+<!-- Characters Table -->
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="character : ${characters.content}"> <!-- .content needed for Page<T> -->
+        <td th:text="${character.name}">Name</td>
+        <td><img th:src="${character.image}" alt="Character image" /></td>
+        <td>
+            <a th:href="@{/characters/{id}(id=${character.id})}">View</a>
+            <a th:href="@{/characters/{id}/edit(id=${character.id})}">Edit</a>
+            <form th:action="@{/characters/{id}/delete(id=${character.id})}" method="post" style="display: inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<!-- Pagination -->
+<div th:if="${characters.totalPages > 1}">
+        <span th:each="pageNumber : ${#numbers.sequence(0, characters.totalPages - 1)}">
+            <a th:href="@{/characters(page=${pageNumber})}"
+               th:text="${pageNumber + 1}"
+               th:class="${pageNumber==characters.number} ? 'active'"></a>
+        </span>
+</div>
+
+<a th:href="@{/characters/new}">Create new character</a>
+</body>
+</html>

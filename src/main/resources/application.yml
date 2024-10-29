@@ -27,6 +27,6 @@ app:
     base-uri: https://api.domainplaceholder.com/errors/
 
 # Logging
-#logging:
-#  level:
-#    root: trace
+logging:
+  level:
+    root: trace

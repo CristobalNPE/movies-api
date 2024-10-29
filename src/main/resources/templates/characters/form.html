@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${isNewCharacter ? 'Create Character' : 'Edit Character'}">Character Form</title>
+    <style>
+        .error { color: red; font-size: 0.8em; }
+        .form-group { margin-bottom: 1em; }
+        textarea { width: 100%; min-height: 100px; }
+    </style>
+</head>
+<body>
+<h1 th:text="${isNewCharacter ? 'Create New Character' : 'Edit Character'}">Character Form</h1>
+
+<form th:object="${character}" method="post"
+      th:action="${isNewCharacter ? '/characters' : '/characters/' + character.id}">
+
+    <div class="form-group">
+        <label for="image">Image URL:</label>
+        <input type="url" id="image" th:field="*{image}" />
+        <span class="error" th:if="${#fields.hasErrors('image')}"
+              th:errors="*{image}">Image Error</span>
+    </div>
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{name}" />
+        <span class="error" th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}">Name Error</span>
+    </div>
+
+    <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" id="age" th:field="*{age}" min="0" max="150" />
+        <span class="error" th:if="${#fields.hasErrors('age')}"
+              th:errors="*{age}">Age Error</span>
+    </div>
+
+    <div class="form-group">
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" th:field="*{weight}"
+               min="0" max="1000" step="0.1" />
+        <span class="error" th:if="${#fields.hasErrors('weight')}"
+              th:errors="*{weight}">Weight Error</span>
+    </div>
+
+    <div class="form-group">
+        <label for="story">Story:</label>
+        <textarea id="story" th:field="*{story}"
+                  placeholder="Enter character's story (10-1000 characters)"></textarea>
+        <span class="error" th:if="${#fields.hasErrors('story')}"
+              th:errors="*{story}">Story Error</span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" th:text="${isNewCharacter ? 'Create' : 'Update'}">Submit</button>
+        <a href="/characters" class="button">Cancel</a>
+    </div>
+</form>
+</body>
+</html>
