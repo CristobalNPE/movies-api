@@ -53,7 +53,7 @@
 
     <div class="form-group">
         <button type="submit" th:text="${isNewCharacter ? 'Create' : 'Update'}">Submit</button>
-        <a href="/characters" class="button">Cancel</a>
+        <a th:href="@{/characters}" class="button">Cancel</a>
     </div>
 </form>
 </body>
