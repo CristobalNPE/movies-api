@@ -19,10 +19,12 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class CharacterRestControllerTests {
 
+    public static final String BASE_URL = "/api/v1/characters";
     @Autowired
     private MockMvc mockMvc;
 
@@ -40,21 +42,23 @@ public class CharacterRestControllerTests {
 
         @Test
         void searchShouldReturnAllCharactersWhenNoParams() throws Exception {
-            mockMvc.perform(get("/api/v1/characters"))
+            mockMvc.perform(get(BASE_URL))
                    .andExpect(status().isOk())
                    .andExpect(jsonPath("$.content.length()").value(5));
         }
 
         @Test
         void searchShouldReturnFilteredByName() throws Exception {
-            mockMvc.perform(get("/api/v1/characters?name=test"))
+            mockMvc.perform(get(BASE_URL)
+                           .param("name", "test"))
                    .andExpect(status().isOk())
                    .andExpect(jsonPath("$.content.length()").value(3));
         }
 
         @Test
         void searchShouldReturnFilteredByMovieTitle() throws Exception {
-            mockMvc.perform(get("/api/v1/characters?movieTitle=Delta"))
+            mockMvc.perform(get(BASE_URL)
+                           .param("movieTitle", "Delta"))
                    .andExpect(status().isOk())
                    .andExpect(jsonPath("$.content.length()").value(2))
                    .andExpect(jsonPath("$.content[0].name").value("Test Character A"))
@@ -63,7 +67,8 @@ public class CharacterRestControllerTests {
 
         @Test
         void searchShouldReturnFilteredByAge() throws Exception {
-            mockMvc.perform(get("/api/v1/characters?age=20"))
+            mockMvc.perform(get(BASE_URL)
+                           .param("age", "20"))
                    .andExpect(status().isOk())
                    .andExpect(jsonPath("$.content.length()").value(1))
                    .andExpect(jsonPath("$.content[0].name").value("Test Character A"));
@@ -71,7 +76,7 @@ public class CharacterRestControllerTests {
 
         @Test
         void shouldReturnCharacterWhenDataIsSaved() throws Exception {
-            mockMvc.perform(get("/api/v1/characters/1"))
+            mockMvc.perform(get(BASE_URL + "/1"))
                    .andExpect(status().isOk())
                    .andExpect(jsonPath("$.id").value(1))
                    .andExpect(jsonPath("$.name").value("Test Character A"))
@@ -96,7 +101,7 @@ public class CharacterRestControllerTests {
                                             .build();
 
 
-            String location = mockMvc.perform(post("/api/v1/characters")
+            String location = mockMvc.perform(post(BASE_URL)
                                              .with(csrf())
                                              .content(mapper.writeValueAsString(creationRequest))
                                              .contentType(MediaType.APPLICATION_JSON)
@@ -121,20 +126,20 @@ public class CharacterRestControllerTests {
         @DirtiesContext
         void shouldDeleteCharacterIfPresent() throws Exception {
 
-            mockMvc.perform(get("/api/v1/characters/1"))
+            mockMvc.perform(get(BASE_URL + "/1"))
                    .andExpect(status().isOk());
 
-            mockMvc.perform(delete("/api/v1/characters/1"))
+            mockMvc.perform(delete(BASE_URL + "/1"))
                    .andExpect(status().isNoContent());
 
-            mockMvc.perform(get("/api/v1/characters/1"))
+            mockMvc.perform(get(BASE_URL + "/1"))
                    .andExpect(status().isNotFound());
 
         }
 
         @Test
         void shouldReturnBadRequestIsNoCharacter() throws Exception {
-            mockMvc.perform(delete("/api/v1/characters/99112266"))
+            mockMvc.perform(delete(BASE_URL + "/99112266"))
                    .andExpect(status().isNotFound());
         }
 
@@ -149,13 +154,13 @@ public class CharacterRestControllerTests {
                                                                          .story("Updated story")
                                                                          .build();
 
-            mockMvc.perform(put("/api/v1/characters/1")
+            mockMvc.perform(put(BASE_URL + "/1")
                            .content(mapper.writeValueAsString(updateRequest))
                            .contentType(MediaType.APPLICATION_JSON)
                    )
                    .andExpect(status().isNoContent());
 
-            mockMvc.perform(get("/api/v1/characters/1"))
+            mockMvc.perform(get(BASE_URL + "/1"))
                    .andExpect(status().isOk())
                    .andExpect(jsonPath("$.name").value("Updated Character Name"))
                    .andExpect(jsonPath("$.image").value("updated-image.png"))
@@ -172,14 +177,14 @@ public class CharacterRestControllerTests {
                                                                          .weight(100.0)
                                                                          .build();
 
-            mockMvc.perform(put("/api/v1/characters/1")
+            mockMvc.perform(put(BASE_URL + "/1")
                            .with(csrf())
                            .content(mapper.writeValueAsString(updateRequest))
                            .contentType(MediaType.APPLICATION_JSON)
                    )
                    .andExpect(status().isNoContent());
 
-            mockMvc.perform(get("/api/v1/characters/1"))
+            mockMvc.perform(get(BASE_URL + "/1"))
                    .andExpect(status().isOk())
                    .andExpect(jsonPath("$.name").value("Updated Character Name"))
                    .andExpect(jsonPath("$.image").value("char1.jpg"))
